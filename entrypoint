@@ -1,4 +1,15 @@
 #!/bin/bash
+# Mount S3 bucket to /home
+echo "`cat /etc/secret/aws-access-key`:`cat /etc/secret/aws-secret-key`" > ~/.passwd-s3fs
+chmod 600 ~/.passwd-s3fs
+mkdir /tmp/cache
+chmod 777 /tmp/cache
+addgroup s3a
+mkdir  -p /home/s3a/upload
+s3fs -o use_cache=/tmp/cache -o allow_other $S3_BUCKET /home/s3a/upload
+mkdir /etc/sftp
+cp /home/s3a/upload/etc/sftp/users.conf /etc/sftp/
+
 set -e
 
 # Paths
